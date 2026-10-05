@@ -3,8 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import { FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp } from "react-icons/fa";
 import { HiUserGroup } from "react-icons/hi";
+import { usePathname } from "next/navigation";
 
 export default function FloatingSocialMedia() {
+  const pathname = usePathname();
   const [isExpanded, setIsExpanded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -56,6 +58,8 @@ export default function FloatingSocialMedia() {
       setIsExpanded(false);
     }, 10000);
   };
+
+  if (pathname === "/") return null;
 
   return (
     <div className="fixed bottom-8 right-8 z-40 hidden sm:block" ref={containerRef}>

@@ -1,215 +1,77 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp, FaLinkedin, FaPhone, FaEnvelope } from "react-icons/fa";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
+
+const links = [
+  ["Home", "/"],
+  ["Services", "/services"],
+  ["Gallery", "/gallery"],
+  ["About", "/about"],
+  ["FAQ", "/faq"],
+] as const;
 
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 28);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
 
   return (
-    <>
-      {/* Top Contact Bar */}
-      <div className="bg-gradient-to-r from-primary-600 to-secondary-500 text-white py-3 shadow-md">
-        <div className="container-custom">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-6">
-            {/* Contact Info */}
-            <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
-              {/* Call Button */}
-              <a 
-                href="tel:+917858992627"
-                className="flex items-center gap-2 hover:opacity-90 transition-opacity duration-300 group"
-              >
-                <FaPhone className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                <span className="font-medium">+91 7858992627</span>
-              </a>
-              
-              {/* Email Link */}
-              <a 
-                href="mailto:support@vastuinside.com"
-                className="flex items-center gap-2 hover:opacity-90 transition-opacity duration-300 group"
-              >
-                <FaEnvelope className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                <span className="font-medium">support@vastuinside.com</span>
-              </a>
-            </div>
+    <header className={`site-header ${isHome ? "site-header--home" : "site-header--inner"} ${scrolled ? "is-scrolled" : ""}`}>
+      <nav className="site-nav" aria-label="Primary navigation">
+        <Link href="/" className="site-logo" aria-label="Vastu Inside home">
+          <Image src="/images/logo.png" alt="Vastu Inside" width={3528} height={1037} priority />
+        </Link>
 
-            {/* Book Consultation Button */}
-            <button 
-              onClick={() => window.open('/contact', '_self')}
-              className="bg-white text-primary-600 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 hover:scale-105 transition-all duration-300 shadow-lg"
-            >
-              Book Consultation
-            </button>
+        <div className="site-nav__links">
+          {links.map(([label, href]) => (
+            <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined}>{label}</Link>
+          ))}
+        </div>
+
+        <Link href="/contact" className="site-nav__cta">Book consultation <span aria-hidden="true">↗</span></Link>
+
+        <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-menu" aria-label={menuOpen ? "Close menu" : "Open menu"}>
+          <span /><span />
+        </button>
+      </nav>
+
+      <div id="mobile-menu" className={`mobile-menu ${menuOpen ? "is-open" : ""}`} aria-hidden={!menuOpen}>
+        <div className="mobile-menu__number">Menu / 01—05</div>
+        <div className="mobile-menu__links">
+          {links.map(([label, href], index) => (
+            <Link key={href} href={href} tabIndex={menuOpen ? 0 : -1}><span>0{index + 1}</span>{label}<i aria-hidden="true">↗</i></Link>
+          ))}
+        </div>
+        <div className="mobile-menu__footer">
+          <div><a href="tel:+917858992627">+91 7858992627</a><a href="mailto:support@vastuinside.com">support@vastuinside.com</a></div>
+          <div className="mobile-menu__socials">
+            <a href="https://wa.me/917858992627" target="_blank" rel="noreferrer" aria-label="WhatsApp"><FaWhatsapp /></a>
+            <a href="https://www.instagram.com/acharya.vikash_27/" target="_blank" rel="noreferrer" aria-label="Instagram"><FaInstagram /></a>
+            <a href="https://www.youtube.com/@Acharayavikashkumar" target="_blank" rel="noreferrer" aria-label="YouTube"><FaYoutube /></a>
           </div>
         </div>
       </div>
-
-      {/* Main Navbar */}
-      <nav className="sticky top-0 z-50 bg-white shadow-md">
-      <div className="container-custom">
-        <div className="flex justify-between items-center h-16 md:h-20">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2 group">
-            <img src="/images/logo.png" alt="VastuInside Logo" className="h-20 w-auto" />
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <Link href="/" className="nav-link-hover text-gray-700 hover:text-primary-500 font-medium transition-all duration-300 stagger-1 nav-item-enter-active">
-              Home
-            </Link>
-            
-            <Link href="/services" className="nav-link-hover text-gray-700 hover:text-primary-500 font-medium transition-all duration-300 stagger-2 nav-item-enter-active">
-              Services
-            </Link>
-            
-            <Link href="/gallery" className="nav-link-hover text-gray-700 hover:text-primary-500 font-medium transition-all duration-300 stagger-3 nav-item-enter-active">
-              Gallery
-            </Link>
-            
-            <Link href="/about" className="nav-link-hover text-gray-700 hover:text-primary-500 font-medium transition-all duration-300 stagger-4 nav-item-enter-active">
-              About Us
-            </Link>
-            
-            <Link href="/faq" className="nav-link-hover text-gray-700 hover:text-primary-500 font-medium transition-all duration-300 stagger-5 nav-item-enter-active">
-              FAQ
-            </Link>
-            
-            <Link href="/contact" className="btn-primary shimmer pulse-glow inline-flex items-center gap-2 stagger-6 transform hover:scale-105 transition-all duration-300">
-              <FaPhone className="w-4 h-4" />
-              Contact Us
-            </Link>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden p-2 text-gray-700 hover:text-primary-500 transition-all duration-300 hover:scale-110"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            <svg
-              className={`w-6 h-6 transition-transform duration-300 ${isMenuOpen ? 'rotate-90' : ''}`}
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              {isMenuOpen ? (
-                <path d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden py-4 border-t mobile-menu-enter-active">
-            <div className="flex flex-col space-y-4">
-              <Link 
-                href="/" 
-                className="nav-link-hover text-gray-700 hover:text-primary-500 font-medium transition-all duration-300 stagger-1"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Home
-              </Link>
-              
-              <Link 
-                href="/services" 
-                className="nav-link-hover text-gray-700 hover:text-primary-500 font-medium transition-all duration-300 stagger-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Services
-              </Link>
-              
-              <Link 
-                href="/gallery" 
-                className="nav-link-hover text-gray-700 hover:text-primary-500 font-medium transition-all duration-300 stagger-3"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Gallery
-              </Link>
-              
-              <Link 
-                href="/faq" 
-                className="nav-link-hover text-gray-700 hover:text-primary-500 font-medium transition-all duration-300 stagger-4"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                FAQ
-              </Link>
-              
-              <Link 
-                href="/about" 
-                className="nav-link-hover text-gray-700 hover:text-primary-500 font-medium transition-all duration-300 stagger-5"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                About
-              </Link>
-              
-              {/* Mobile Social Media Icons */}
-              <div className="stagger-6 pt-4 border-t border-gray-200">
-                <p className="text-sm text-gray-600 mb-3 font-semibold">Follow Us</p>
-                <div className="flex gap-3">
-                  <a 
-                    href="https://www.facebook.com/profile.php?id=61581478106818" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center text-white transition-all duration-300 hover:scale-110 shadow-md"
-                    aria-label="Facebook"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <FaFacebookF className="w-4 h-4" />
-                  </a>
-                  <a 
-                    href="https://www.instagram.com/acharaya.vikash_27/" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 flex items-center justify-center text-white transition-all duration-300 hover:scale-110 shadow-md"
-                    aria-label="Instagram"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <FaInstagram className="w-4 h-4" />
-                  </a>
-                  <a 
-                    href="https://www.youtube.com/@Acharayavikashkumar" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full bg-red-600 hover:bg-red-700 flex items-center justify-center text-white transition-all duration-300 hover:scale-110 shadow-md"
-                    aria-label="YouTube"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <FaYoutube className="w-4 h-4" />
-                  </a>
-                  <a 
-                    href="https://wa.me/917858992627" 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center text-white transition-all duration-300 hover:scale-110 shadow-md"
-                    aria-label="WhatsApp"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <FaWhatsapp className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
-              
-              <Link 
-                href="/contact" 
-                className="btn-primary inline-block text-center shimmer pulse-glow stagger-7 transform hover:scale-105 transition-all duration-300"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                <FaPhone className="inline w-4 h-4 mr-2" />
-                Contact Us
-              </Link>
-            </div>
-          </div>
-        )}
-      </div>
-    </nav>
-    </>
+    </header>
   );
 }
