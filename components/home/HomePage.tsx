@@ -3,8 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FaArrowRight, FaInstagram, FaWhatsapp } from "react-icons/fa";
+import { FaArrowRight, FaFacebookF, FaInstagram, FaWhatsapp, FaYoutube } from "react-icons/fa";
 import ConsultationModal from "./ConsultationModal";
+import FreeVastuCheck from "./FreeVastuCheck";
+import IndiaPresence from "./IndiaPresence";
+import VastuAssistant from "./VastuAssistant";
 import styles from "./HomePage.module.css";
 
 const services = [
@@ -115,6 +118,7 @@ export default function HomePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showPreloader, setShowPreloader] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
   const openConsultation = useCallback(() => setIsModalOpen(true), []);
 
   useEffect(() => {
@@ -126,6 +130,21 @@ export default function HomePage() {
       const timer = window.setTimeout(() => setShowPreloader(false), 1550);
       return () => window.clearTimeout(timer);
     }
+  }, []);
+
+  useEffect(() => {
+    const updateProgress = () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollable > 0 ? Math.min(window.scrollY / scrollable, 1) : 0;
+      if (progressRef.current) progressRef.current.style.transform = `scaleX(${progress})`;
+    };
+    updateProgress();
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+    return () => {
+      window.removeEventListener("scroll", updateProgress);
+      window.removeEventListener("resize", updateProgress);
+    };
   }, []);
 
   useEffect(() => {
@@ -172,6 +191,7 @@ export default function HomePage() {
 
   return (
     <div className={styles.page} ref={rootRef}>
+      <div className={styles.scrollProgress} ref={progressRef} aria-hidden="true" />
       {showPreloader && (
         <div className={styles.preloader} aria-hidden="true">
           <div className={styles.preloaderGrid} />
@@ -182,7 +202,7 @@ export default function HomePage() {
         </div>
       )}
 
-      <main>
+      <div>
         <section className={styles.hero} aria-labelledby="hero-title">
           <div className={styles.heroArchitecture} aria-hidden="true">
             <Image src="/images/consultation.jpg" alt="" fill priority sizes="100vw" className={styles.coverImage} />
@@ -191,15 +211,31 @@ export default function HomePage() {
           <div className={styles.vastuGrid} aria-hidden="true"><span /><span /><span /></div>
           <div className={styles.heroContent}>
             <div className={styles.heroCopy}>
-              <p className={styles.eyebrow}>Vastu · Interiors · Construction</p>
+              <p className={styles.eyebrow}>Welcome to Vastu Inside</p>
               <h1 id="hero-title">Spaces that feel<em>as good as they look.</em></h1>
               <p className={styles.heroLead}>Traditional Vastu wisdom, thoughtfully interpreted for the way we live, work and build today.</p>
+              <p className={styles.heroDisciplines}>Vastu <i /> Interiors <i /> Construction</p>
               <div className={styles.heroActions}>
                 <button className={styles.primaryButton} onClick={openConsultation}>Book a consultation <FaArrowRight aria-hidden="true" /></button>
-                <a className={styles.textLink} href="#approach">Explore our approach <Arrow /></a>
+                <a className={styles.textLink} href="#free-vastu-check">Start free Vastu check <Arrow /></a>
               </div>
             </div>
-            <div className={styles.heroPortrait} data-reveal>
+            <div
+              className={styles.heroPortrait}
+              data-reveal
+              onPointerMove={(event) => {
+                if (event.pointerType !== "mouse") return;
+                const bounds = event.currentTarget.getBoundingClientRect();
+                const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+                const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+                event.currentTarget.style.setProperty("--tilt-x", `${y * -3}deg`);
+                event.currentTarget.style.setProperty("--tilt-y", `${x * 4}deg`);
+              }}
+              onPointerLeave={(event) => {
+                event.currentTarget.style.setProperty("--tilt-x", "0deg");
+                event.currentTarget.style.setProperty("--tilt-y", "0deg");
+              }}
+            >
               <div className={styles.portraitFrame}>
                 <Image src="/images/acharya-vikash-kumar.jpg" alt="Acharya Vikash Kumar, Vastu consultant" fill priority sizes="(max-width: 800px) 82vw, 42vw" className={styles.portraitImage} />
               </div>
@@ -236,6 +272,11 @@ export default function HomePage() {
             <blockquote data-reveal>“A considered space should support the life unfolding within it.”</blockquote>
             <p data-reveal>Vastu Inside brings Acharya Vikash Kumar&apos;s consultation together with interior thinking and construction planning—so guidance can remain connected from first observation to final space.</p>
             <Link className={styles.textLinkDark} href="/about">Know the expert <Arrow /></Link>
+            <div className={styles.expertSocials} aria-label="Acharya Vikash Kumar on social media">
+              <a href="https://www.instagram.com/acharya.vikash_27/" target="_blank" rel="noreferrer" aria-label="Instagram"><FaInstagram /></a>
+              <a href="https://www.youtube.com/@Acharayavikashkumar" target="_blank" rel="noreferrer" aria-label="YouTube"><FaYoutube /></a>
+              <a href="https://www.facebook.com/profile.php?id=61581478106818" target="_blank" rel="noreferrer" aria-label="Facebook"><FaFacebookF /></a>
+            </div>
           </div>
         </section>
 
@@ -276,6 +317,8 @@ export default function HomePage() {
           </div>
         </section>
 
+        <FreeVastuCheck onConsultation={openConsultation} />
+
         <section className={styles.process} id="approach" aria-labelledby="process-title">
           <div className={styles.processIntro}><p className={styles.eyebrow}>Our approach</p><h2 id="process-title">From first observation to meaningful change.</h2></div>
           <div className={styles.processGrid}>
@@ -296,6 +339,8 @@ export default function HomePage() {
           <div className={styles.reasonList}>{reasons.map(([title, text], index) => (<article key={title} data-reveal><span>0{index + 1}</span><h3>{title}</h3><p>{text}</p></article>))}</div>
         </section>
 
+        <IndiaPresence />
+
         <section className={styles.testimonials} aria-labelledby="testimonials-title">
           <div className={styles.testimonialSide}>
             <p className={styles.eyebrow}>Client experiences</p><h2 id="testimonials-title">Spaces changed. Stories shared.</h2>
@@ -304,13 +349,27 @@ export default function HomePage() {
           <div className={styles.testimonialQuote} aria-live="polite"><span aria-hidden="true">“</span><blockquote>{testimonials[activeTestimonial].quote}</blockquote><div className={styles.testimonialAuthor}><Image src={testimonials[activeTestimonial].image} alt="" width={64} height={64} /><div><strong>{testimonials[activeTestimonial].name}</strong><small>{testimonials[activeTestimonial].role}</small></div></div></div>
         </section>
 
+        <section className={styles.socialInsights} aria-labelledby="social-title">
+          <div>
+            <p className={styles.eyebrow}>Follow the conversation</p>
+            <h2 id="social-title">Ideas for more considered spaces.</h2>
+          </div>
+          <p>Short observations, project moments and practical Vastu perspectives—shared through Vastu Inside&apos;s verified channels.</p>
+          <nav aria-label="Vastu Inside social channels">
+            <a href="https://www.instagram.com/acharya.vikash_27/" target="_blank" rel="noreferrer"><FaInstagram /><span><b>Instagram</b><small>@acharya.vikash_27</small></span><Arrow /></a>
+            <a href="https://www.youtube.com/@Acharayavikashkumar" target="_blank" rel="noreferrer"><FaYoutube /><span><b>YouTube</b><small>Watch insights</small></span><Arrow /></a>
+            <a href="https://www.facebook.com/profile.php?id=61581478106818" target="_blank" rel="noreferrer"><FaFacebookF /><span><b>Facebook</b><small>Join the community</small></span><Arrow /></a>
+          </nav>
+        </section>
+
         <section className={styles.finalCta} aria-labelledby="cta-title">
           <Image src="/images/carousel/vastu-peace.jpg" alt="A calm space at sunset" fill sizes="100vw" className={styles.coverImage} />
           <div className={styles.finalCtaOverlay} />
           <div className={styles.finalCtaContent}><p className={styles.eyebrow}>Begin with a conversation</p><h2 id="cta-title">Your space may already be telling you what needs to change.</h2><p>Let&apos;s look at it with greater clarity—through direction, design and the life you want the space to support.</p><button className={styles.lightButton} onClick={openConsultation}>Book your consultation <FaArrowRight aria-hidden="true" /></button></div>
           <div className={styles.finalSocials}><a href="https://wa.me/917858992627" target="_blank" rel="noreferrer" aria-label="WhatsApp"><FaWhatsapp aria-hidden="true" /></a><a href="https://www.instagram.com/acharya.vikash_27/" target="_blank" rel="noreferrer" aria-label="Instagram"><FaInstagram aria-hidden="true" /></a></div>
         </section>
-      </main>
+      </div>
+      <VastuAssistant />
       <ConsultationModal open={isModalOpen} onClose={closeConsultation} />
     </div>
   );

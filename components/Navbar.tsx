@@ -62,6 +62,7 @@ export default function Navbar() {
           {links.map(([label, href], index) => (
             <Link key={href} href={href} tabIndex={menuOpen ? 0 : -1}><span>0{index + 1}</span>{label}<i aria-hidden="true">↗</i></Link>
           ))}
+          <a className="mobile-menu__free-check" href="/#free-vastu-check" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1}><span>Free</span>Start Vastu Check<i aria-hidden="true">→</i></a>
         </div>
         <div className="mobile-menu__footer">
           <div><a href="tel:+917858992627">+91 7858992627</a><a href="mailto:support@vastuinside.com">support@vastuinside.com</a></div>
