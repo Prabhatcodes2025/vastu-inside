@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styles from "./HomePage.module.css";
 
 type FreeVastuCheckProps = {
@@ -59,8 +59,21 @@ export default function FreeVastuCheck({ onConsultation }: FreeVastuCheckProps) 
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [complete, setComplete] = useState(false);
+  const experienceRef = useRef<HTMLDivElement>(null);
   const question = questions[step];
   const selected = answers[question?.key];
+
+  const bringExperienceIntoView = () => {
+    window.requestAnimationFrame(() => {
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      experienceRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    });
+  };
+
+  const begin = () => {
+    setStarted(true);
+    bringExperienceIntoView();
+  };
 
   const choose = (answer: string) => {
     setAnswers((current) => ({ ...current, [question.key]: answer }));
@@ -70,6 +83,7 @@ export default function FreeVastuCheck({ onConsultation }: FreeVastuCheckProps) 
     if (!selected) return;
     if (step === questions.length - 1) setComplete(true);
     else setStep((current) => current + 1);
+    bringExperienceIntoView();
   };
 
   const reset = () => {
@@ -93,13 +107,13 @@ export default function FreeVastuCheck({ onConsultation }: FreeVastuCheckProps) 
         </div>
       </div>
 
-      <div className={styles.checkExperience}>
+      <div className={styles.checkExperience} ref={experienceRef}>
         {!started && !complete && (
           <div className={styles.checkStart}>
             <span>Free Vastu Check</span>
             <strong>Six questions.<br />One clearer conversation.</strong>
             <p>This is a general orientation exercise—not a professional Vastu diagnosis.</p>
-            <button onClick={() => setStarted(true)}>Start free check <b aria-hidden="true">→</b></button>
+            <button onClick={begin}>Start free check <b aria-hidden="true">→</b></button>
           </div>
         )}
 

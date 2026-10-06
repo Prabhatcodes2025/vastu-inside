@@ -22,6 +22,7 @@ export default function CountUp({
   const countRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
+    const observedNode = countRef.current;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
@@ -31,13 +32,13 @@ export default function CountUp({
       { threshold: 0.1 }
     );
 
-    if (countRef.current) {
-      observer.observe(countRef.current);
+    if (observedNode) {
+      observer.observe(observedNode);
     }
 
     return () => {
-      if (countRef.current) {
-        observer.unobserve(countRef.current);
+      if (observedNode) {
+        observer.unobserve(observedNode);
       }
     };
   }, []);

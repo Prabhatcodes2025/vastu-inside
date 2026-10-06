@@ -125,10 +125,13 @@ export default function HomePage() {
     const hasSeenLoader = sessionStorage.getItem("vastu-inside-intro-seen");
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!hasSeenLoader && !reduceMotion) {
-      setShowPreloader(true);
       sessionStorage.setItem("vastu-inside-intro-seen", "true");
-      const timer = window.setTimeout(() => setShowPreloader(false), 1550);
-      return () => window.clearTimeout(timer);
+      const showTimer = window.setTimeout(() => setShowPreloader(true), 0);
+      const hideTimer = window.setTimeout(() => setShowPreloader(false), 1550);
+      return () => {
+        window.clearTimeout(showTimer);
+        window.clearTimeout(hideTimer);
+      };
     }
   }, []);
 
@@ -247,10 +250,10 @@ export default function HomePage() {
         </section>
 
         <section className={styles.manifesto} id="manifesto">
-          <div className={styles.sectionIndex}>01 / Philosophy</div>
+          <div className={styles.sectionIndex}>01 / Welcome</div>
           <div className={styles.manifestoInner}>
-            <p className={styles.eyebrow} data-reveal>Beyond walls and directions</p>
-            <h2 data-reveal>A space is not only seen.<span>It is sensed.</span></h2>
+            <p className={styles.eyebrow} data-reveal>Welcome to</p>
+            <h2 data-reveal>Vastu Inside.<span>Ancient wisdom for modern spaces.</span></h2>
             <p className={styles.manifestoCopy} data-reveal>The way light enters, movement flows and rooms relate can quietly shape everyday life. Vastu Inside brings direction, architecture and human experience into one considered conversation.</p>
             <div className={styles.manifestoWords} aria-label="Space, energy, direction, balance">
               {["Space", "Energy", "Direction", "Balance"].map((word, index) => (
@@ -267,8 +270,8 @@ export default function HomePage() {
           </div>
           <div className={styles.expertCopy}>
             <span className={styles.verticalLabel}>Meet the expert</span>
-            <p className={styles.eyebrow} data-reveal>Acharya Vikash Kumar</p>
-            <h2 id="expert-title" data-reveal>Ancient understanding. A contemporary point of view.</h2>
+            <p className={styles.eyebrow} data-reveal>Meet the expert</p>
+            <h2 id="expert-title" data-reveal><span>Acharya</span> Vikash Kumar.</h2>
             <blockquote data-reveal>“A considered space should support the life unfolding within it.”</blockquote>
             <p data-reveal>Vastu Inside brings Acharya Vikash Kumar&apos;s consultation together with interior thinking and construction planning—so guidance can remain connected from first observation to final space.</p>
             <Link className={styles.textLinkDark} href="/about">Know the expert <Arrow /></Link>

@@ -28,10 +28,6 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
@@ -60,9 +56,9 @@ export default function Navbar() {
         <div className="mobile-menu__number">Menu / 01—05</div>
         <div className="mobile-menu__links">
           {links.map(([label, href], index) => (
-            <Link key={href} href={href} tabIndex={menuOpen ? 0 : -1}><span>0{index + 1}</span>{label}<i aria-hidden="true">↗</i></Link>
+            <Link key={href} href={href} onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1}><span>0{index + 1}</span>{label}<i aria-hidden="true">↗</i></Link>
           ))}
-          <a className="mobile-menu__free-check" href="/#free-vastu-check" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1}><span>Free</span>Start Vastu Check<i aria-hidden="true">→</i></a>
+          <Link className="mobile-menu__free-check" href="/#free-vastu-check" onClick={() => setMenuOpen(false)} tabIndex={menuOpen ? 0 : -1}><span>Free</span>Start Vastu Check<i aria-hidden="true">→</i></Link>
         </div>
         <div className="mobile-menu__footer">
           <div><a href="tel:+917858992627">+91 7858992627</a><a href="mailto:support@vastuinside.com">support@vastuinside.com</a></div>

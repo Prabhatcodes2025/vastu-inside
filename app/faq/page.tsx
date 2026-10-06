@@ -103,7 +103,7 @@ export default function FAQPage() {
           <div className="bg-gradient-to-r from-primary-500 to-secondary-500 rounded-3xl p-8 md:p-12 text-center text-white">
             <h2 className="heading-lg mb-4 text-white">Still Have Questions?</h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto text-white/90">
-              Can't find the answer you're looking for? Our team is here to help you with personalized guidance.
+              Can&apos;t find the answer you&apos;re looking for? Our team is here to help you with personalized guidance.
             </p>
             <Link href="/contact" className="inline-flex items-center gap-2 bg-white text-primary-500 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors duration-300 shadow-lg">
               <FaCalendarAlt className="w-5 h-5" />

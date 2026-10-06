@@ -56,7 +56,7 @@ export default function AboutPage() {
                   respecting modern architectural constraints and lifestyle needs.
                 </p>
                 <p>
-                  Today, we've helped over 500 clients transform their spaces, from small apartments to 
+                  Today, we&apos;ve helped over 500 clients transform their spaces, from small apartments to
                   large corporate offices, always focusing on practical solutions that deliver real results.
                 </p>
               </div>

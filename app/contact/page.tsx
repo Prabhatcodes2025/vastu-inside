@@ -130,7 +130,7 @@ export default function ContactPage() {
           <h1 className="heading-xl mb-6 animate-fade-in"><span className="text-gradient">Get In Touch</span></h1>
           <p className="text-body max-w-3xl mx-auto animate-fade-in-delay">
             Have questions about our services? Ready to schedule a consultation? 
-            We're here to help you on your journey to a harmonious space.
+            We&apos;re here to help you on your journey to a harmonious space.
           </p>
         </div>
       </section>
@@ -166,7 +166,7 @@ export default function ContactPage() {
           <div className="text-center mb-12">
             <h2 className="heading-lg mb-4">Consultation <span className="text-gradient">Hours</span></h2>
             <p className="text-body max-w-2xl mx-auto">
-              We're available to serve you at convenient times throughout the week
+              We&apos;re available to serve you at convenient times throughout the week
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
