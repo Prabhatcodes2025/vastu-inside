@@ -45,7 +45,7 @@ const directions = [
   { key: "NW", name: "North-West", note: "Movement, exchange and transition." },
 ];
 
-const process = [
+const processSteps = [
   {
     number: "01",
     title: "Observe",
@@ -280,11 +280,11 @@ export default function HomePage() {
           <div className={styles.processIntro}><p className={styles.eyebrow}>Our approach</p><h2 id="process-title">From first observation to meaningful change.</h2></div>
           <div className={styles.processGrid}>
             <div className={styles.processVisual}>
-              {process.map((step, index) => (<Image key={step.image} src={step.image} alt="" fill sizes="(max-width: 900px) 100vw, 50vw" className={`${styles.coverImage} ${styles.processImage} ${activeProcess === index ? styles.processImageActive : ""}`} />))}
-              <span>{process[activeProcess].number}</span>
+              {processSteps.map((step, index) => (<Image key={step.image} src={step.image} alt="" fill sizes="(max-width: 900px) 100vw, 50vw" className={`${styles.coverImage} ${styles.processImage} ${activeProcess === index ? styles.processImageActive : ""}`} />))}
+              <span>{processSteps[activeProcess].number}</span>
             </div>
             <div className={styles.processSteps}>
-              {process.map((step, index) => (
+              {processSteps.map((step, index) => (
                 <button key={step.title} className={`${styles.processStep} ${activeProcess === index ? styles.processStepActive : ""}`} onClick={() => setActiveProcess(index)} onMouseEnter={() => setActiveProcess(index)} onFocus={() => setActiveProcess(index)}><span>{step.number}</span><div><h3>{step.title}</h3><p>{step.text}</p></div></button>
               ))}
             </div>

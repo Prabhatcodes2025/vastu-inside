@@ -14,6 +14,7 @@
 
   body {
     @apply bg-white text-gray-900;
+    font-family: Inter, Avenir, "Segoe UI", Helvetica, Arial, sans-serif;
   }
 }
 

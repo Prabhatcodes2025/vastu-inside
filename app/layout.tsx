@@ -1,19 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
 import FloatingSocialMedia from "@/components/FloatingSocialMedia";
 
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  display: 'swap',
-});
-
-
 export const metadata: Metadata = {
+  metadataBase: new URL("https://vastu-inside.vercel.app"),
   title: "Vastu Inside - Professional Vastu Consultation Services",
   description: "Expert Vastu consultation services for homes, offices, and commercial spaces. Harmonize your space with ancient wisdom and modern understanding.",
   keywords: ["vastu", "vastu shastra", "consultation", "feng shui", "home design", "architecture"],
@@ -51,7 +44,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.className} antialiased`}>
+      <body className="antialiased">
         <Navbar />
         <FloatingSocialMedia />
         <main className="min-h-screen">
